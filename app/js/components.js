@@ -1979,8 +1979,9 @@ class AND extends Component {
         this.addInputPort({ side: 3, pos: 1 });
         this.addInputPort({ side: 3, pos: 0 });
         this.addOutputPort({ side: 1, pos: 0 });
+        this.properties.inputPins = 2;
         this.function = function() {
-            this.output[0].value = this.input[0].value & this.input[1].value;
+            this.output[0].value = this.input.map(({value})=>value).reduce((a,b)=>a&b);
         }
     }
 }
@@ -1988,14 +1989,13 @@ class AND extends Component {
 class NAND extends Component {
     constructor(name, pos) {
         super (name, pos, 2, 2, {type: "char", text: "!&"});
-        this.addInputPort({side: 3, pos: 1});
         this.addInputPort({side: 3, pos: 0});
+        this.addInputPort({side: 3, pos: 1});
         this.addOutputPort({side: 1, pos: 0});
-        this.function = () => {
-            if (this.input[0].value & this.input[1].value == 1)
-                this.output[0].value = 0;
-            else
-                this.output[0].value = 1;
+        this.properties.inputPins = 2
+        this.function = function() {
+            let temp = this.input.map(({value})=>value).reduce((a,b)=>a&b)
+            this.output[0].value = (temp==1) ? 0 : 1;
         }
     }
 }
@@ -2006,8 +2006,9 @@ class OR extends Component {
         this.addInputPort({ side: 3, pos: 1 });
         this.addInputPort({ side: 3, pos: 0 });
         this.addOutputPort({ side: 1, pos: 0 });
+        this.properties.inputPins = 2        
         this.function = function() {
-            this.output[0].value = this.input[0].value | this.input[1].value;
+            this.output[0].value = this.input.map(({value})=>value).reduce((a,b)=>a|b);
         }
     }
 }
@@ -2018,11 +2019,10 @@ class NOR extends Component {
         this.addInputPort({ side: 3, pos: 1 });
         this.addInputPort({ side: 3, pos: 0 });
         this.addOutputPort({ side: 1, pos: 0 });
+        this.properties.inputPins = 2        
         this.function = function() {
-            if (this.input[0].value | this.input[1].value)
-                this.output[0].value = 0;
-            else
-                this.output[0].value = 1;
+            let temp = this.input.map(({value})=>value).reduce((a,b)=>a|b)
+            this.output[0].value = (temp==1) ? 0 : 1;
         }
     }
 }
@@ -2033,8 +2033,9 @@ class XOR extends Component {
         this.addInputPort({ side: 3, pos: 1 });
         this.addInputPort({ side: 3, pos: 0 });
         this.addOutputPort({ side: 1, pos: 0 });
+        this.properties.inputPins = 2
         this.function = function() {
-            this.output[0].value = this.input[0].value ^ this.input[1].value;
+            this.output[0].value = this.input.map(({value})=>value).reduce((a,b)=>a^b);
         }
     }
 }
@@ -2045,11 +2046,10 @@ class XNOR extends Component {
         this.addInputPort({ side: 3, pos: 1 });
         this.addInputPort({ side: 3, pos: 0 });
         this.addOutputPort({ side: 1, pos: 0 });
+        this.properties.inputPins = 2
         this.function = function() {
-            if (this.input[0].value ^ this.input[1].value)
-                this.output[0].value = 0;
-            else
-                this.output[0].value = 1;
+            let temp = this.input.map(({value})=>value).reduce((a,b)=>a^b)
+            this.output[0].value = (temp==1) ? 0 : 1;
         }
     }
 }

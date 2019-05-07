@@ -112,11 +112,36 @@
                 changeSize(component,undefined, parseVariableInput(+this.value), true);
             }
         );
-
         const inputs = [name,pos,width,height];
 
         // Additional properties:
-
+        if(component.properties.hasOwnProperty("inputPins")){
+            inputs.push(
+                createInput(
+                    component.properties, 'inputPins', component.properties.inputPins || "",
+                    inputPins => !isNaN(parseVariableInput(inputPins)),
+                    "Enter number of input pins",
+                    function(){
+                        if(component.input.length > this.value){
+                            component.input = component.input.slice(0, this.value)
+                        }
+                        else if(component.input.length < this.value){
+                            let l = component.input.length;
+                            for(let i = 0; i < this.value - l; i++){
+                                component.addInputPort({side: 3, pos:component.input.length})
+                            }
+                            if(component.height < component.input.length){
+                                component.height = component.input.length;
+                            }
+                        }
+                        component.properties.inputPins = parseVariableInput(this.value);
+                        createVariableReference(this.value, component,["properties","inputPins"]);
+                    }
+                )
+            );
+            dialog.container.removeChild(dialog.container.children[dialog.container.children.length - 1]);
+            dialog.container.appendChild(document.createElement("br"));
+        }
         if(component.properties.hasOwnProperty("delay")) {
             inputs.push(
                 createInput(
